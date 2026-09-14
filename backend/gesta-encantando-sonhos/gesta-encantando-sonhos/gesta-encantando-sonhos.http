@@ -1,0 +1,6 @@
+@gesta_encantando_sonhos_HostAddress = http://localhost:5163
+
+GET {{gesta_encantando_sonhos_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
