@@ -15,7 +15,7 @@ Por conta de todas as informações estarem concentradas em duas planilhas do Ex
 
 ### Dificuldade de comunicação entre as funções
 O fluxo durante o evento funcionada da seguinte forma:
-![Fluxo](/img.docs/fluxo-feijoada.png)
+![Fluxo](/docs/img.docs/fluxo-feijoada.png)
 Entre os blocos **Validação Ingresso --> Ingresso já comprado/não comprado** e **Marmita --> Cozinha prepara** há troca de mensagens entre **Recepção <--> Caixa** e **Recepção/Caixa <--> Cozinha** por whatsapp, o que as vezes trás algumas dificuldades em relação a comunicação, já que nem sempre quem recebe a mensagem está com o celular ou está executando aquela função no momento.
 
 ---
@@ -27,7 +27,7 @@ No geral, o sistema irá servir para melhorar o fluxo durante os eventos, centra
 ## Parte 03 - Funcionalidades e Funções
 Cada função dentro do evento faz coisas que são especificas dela, o caixa por exemplo, vende novos ingressos na hora, cobra contas feitas, etc. a recepção, analisa os ingressos, faz pedido de marmita e caso a pessoa não tenha comprado o ingresso indica a pessoa para o caixa, a cozinha recebe as marmitas que tem que fazer e entrega para o cliente. \
 Com base nas atividades de cada um foi criado a ideia de perfis dentro do sistema, cada perfil com suas funcionalidades especificas e funcionalidades compartilhadas.
-![Funcionalidades](/img.docs/funcionalidades.png)
+![Funcionalidades](/docs/img.docs/funcionalidades.png)
 
 ---
 ## Parte 04 - O que o sistema deverá fazer?
