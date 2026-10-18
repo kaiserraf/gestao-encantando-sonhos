@@ -1,0 +1,51 @@
+# ===== Build (gerados ao compilar, nunca versionar) =====
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+
+# ===== Configurações com segredos =====
+# Connection strings, chaves JWT, senhas etc. NÃO devem ir pro Git
+appsettings.Development.json
+appsettings.Local.json
+appsettings.Production.json
+appsettings.json
+*.env
+.env
+secrets.json
+
+# ===== IDE / Editor =====
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# ===== Logs e temporários =====
+*.log
+logs/
+*.tmp
+*.swp
+
+# ===== Testes e cobertura =====
+TestResults/
+coverage/
+*.coverage
+*.trx
+
+# ===== Publicação =====
+publish/
+*.publish.xml
+*.pubxml
+
+# ===== Pacotes NuGet =====
+*.nupkg
+*.snupkg
+packages/
+
+# ===== Sistema operacional =====
+.DS_Store
+Thumbs.db
+desktop.ini

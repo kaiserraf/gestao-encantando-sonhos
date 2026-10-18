@@ -1,0 +1,36 @@
+using gesApi.src.Config;
+using gesApi.src.DTOs;
+using gesApi.src.ModelsEFCore;
+
+namespace gesApi.src.Data.DataInterfaces {
+    public class UserAuthData : IUserAuthData {
+
+        private readonly GesContext _context;
+        public UserAuthData(GesContext context) {
+            _context = context;
+        }
+
+        public async Task<Employee> Login(LoginUserReq user) {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Employee> Logout() {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Employee> RefreshToken() {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Employee> Register(Employee user) {
+            _context.Employees.Add(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
+        public async Task<bool> VerifyCpf(string cpf) {
+            throw new NotImplementedException();
+        }
+
+    }
+}

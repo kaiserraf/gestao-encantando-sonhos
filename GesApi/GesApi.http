@@ -1,0 +1,6 @@
+@GesApi_HostAddress = http://localhost:5192
+
+GET {{GesApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
