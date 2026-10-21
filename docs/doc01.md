@@ -12,7 +12,7 @@ Por conta de todas as informações estarem concentradas em duas planilhas do Ex
 
 ### Dificuldade de comunicação entre as funções
 O fluxo durante o evento funcionada da seguinte forma:
-![Fluxo](/docs/img.docs/fluxo-feijoada.png)
+![Fluxo](/docs/img.docs/fluxograma-2-momento.drawio.png)
 Entre os blocos **Validação Ingresso --> Ingresso já comprado/não comprado** e **Marmita --> Cozinha prepara** há troca de mensagens entre **Recepção <--> Caixa** e **Recepção/Caixa <--> Cozinha** por whatsapp, o que as vezes trás algumas dificuldades em relação a comunicação, já que nem sempre quem recebe a mensagem está com o celular ou está executando aquela função no momento.
 
 ---
@@ -45,13 +45,12 @@ Com base nas atividades de cada um foi criado a ideia de perfis dentro do sistem
 2. os Admin só são cadastrados pelo Dev
 3. o Admin tem acesso a todas as funções
 4. o usuario só pode ter um perfil dentro do sistema
-5. os ingressos devem ter um comprador identificado por cpf
+5. os ingressos devem ter um comprador identificado por nome e telefone
 6. só é possivel dar baixa nos ingressos uma vez
 7. os ingressos são comprados separadamente do produto
 8. os produtos consumidos são pagos no fechamento da conta
-9. só é possivel dar baixa nos ingressos uma vez
+9. um relatório só pode ser gerado ao final do evento
 10. somente o Admin pode gerar os relatórios
 11. o Admin pode gerenciar os perfis dentro do sistema
-12. o ingresso de almoço no local é limitado a um por cpf
-13. os ingressos de marmita não tem limitação por cpf
-14. um relatório só pode ser gerado ao final do evento
+12. o ingresso de almoço no local é limitado a um por pessoa
+13. os ingressos de marmita não tem limitação por pessoa

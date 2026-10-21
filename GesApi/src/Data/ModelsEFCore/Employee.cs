@@ -1,7 +1,11 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace gesApi.src.Data.ModelsEFCore {
-    public class Employee : User {
+    public class Employee {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public string Phone { get; set; }
+        public string Cpf { get; set; }
         public string PasswordHash { get; set; }
         public DateTime RegisterDate { get; set; }
         public int ProfileTypeId { get; set; }
@@ -11,10 +15,10 @@ namespace gesApi.src.Data.ModelsEFCore {
 
         public Employee() {}
 
-        public Employee(string name, string email, string cpf, string passwordHash,
+        public Employee(string name, string phone, string cpf, string passwordHash,
                         int profileTypeId, DateTime registerDate) {
             Name = name;
-            Email = email;
+            Phone = phone;
             Cpf = cpf;
             PasswordHash = passwordHash;
             ProfileTypeId = profileTypeId;

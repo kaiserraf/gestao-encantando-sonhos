@@ -1,6 +1,7 @@
 using gesApi.src.Config;
 using gesApi.src.DTOs;
-using gesApi.src.ModelsEFCore;
+using gesApi.src.Data.ModelsEFCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace gesApi.src.Data.DataInterfaces {
     public class UserAuthData : IUserAuthData {
@@ -10,8 +11,14 @@ namespace gesApi.src.Data.DataInterfaces {
             _context = context;
         }
 
-        public async Task<Employee> Login(LoginUserReq user) {
-            throw new NotImplementedException();
+        public async Task<Employee> Register(Employee user) {
+            _context.Add(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
+        public async Task<Employee> Login(string cpf) {
+            return await _context.Employees.FirstOrDefaultAsync(e => e.Cpf == cpf);
         }
 
         public async Task<Employee> Logout() {
@@ -22,14 +29,8 @@ namespace gesApi.src.Data.DataInterfaces {
             throw new NotImplementedException();
         }
 
-        public async Task<Employee> Register(Employee user) {
-            _context.Employees.Add(user);
-            await _context.SaveChangesAsync();
-            return user;
-        }
-
         public async Task<bool> VerifyCpf(string cpf) {
-            throw new NotImplementedException();
+            return await _context.Employees.AnyAsync(e => e.Cpf == cpf);
         }
 
     }

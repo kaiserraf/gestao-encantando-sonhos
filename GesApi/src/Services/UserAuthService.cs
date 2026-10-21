@@ -1,11 +1,12 @@
 using System.Runtime.InteropServices;
 using gesApi.src.Data.DataInterfaces;
+using gesApi.src.Data.ModelsEFCore;
 using gesApi.src.DTOs;
-using gesApi.src.ModelsEFCore;
 using gesApi.src.Services.ServicesInterface;
 using gesApi.src.Utils.Exceptions;
 using gesApi.src.Utils.UtilsInterfaces;
 using GesApi.src.Utils.UtilsInterfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace gesApi.src.Services {
     public class UserAuthService : IUserAuthService {
@@ -22,7 +23,17 @@ namespace gesApi.src.Services {
 
 
         public async Task<UserRes> LoginService(LoginUserReq user) {
-            throw new NotImplementedException();
+            Employee userExists = await _authData.Login(user.Cpf);
+            if(userExists is null) throw new IncorrectException("EMAIL OU SENHA INVALIDOS");
+            bool validPassword = await _cryptData.VerifyPass(user.Password, userExists.PasswordHash);
+            if(validPassword is false) throw new IncorrectException("EMAIL OU SENHA INVALIDOS");
+
+            string acessToken = await _authenticateUser.CreateAcessToken(
+                userExists.Id, userExists.ProfileTypeId);
+
+            UserRes response = new UserRes(userExists.Name, userExists.ProfileTypeId, acessToken);
+            
+            return response;
         }
 
         public async Task<UserRes> Logout() {
@@ -43,26 +54,18 @@ namespace gesApi.src.Services {
 
             Employee u = new Employee(
                 name: user.Name,
-                email: user.Email,
+                phone: user.Phone,
                 cpf: user.Cpf,
                 passwordHash: passwordHash,
                 profileTypeId: user.ProfileTypeId,
                 registerDate: registerDate
             );
 
+            Employee data = await _authData.Register(u);
+            string acessToken = await _authenticateUser.CreateAcessToken(u.Id, u.ProfileTypeId);
+            UserRes response = new UserRes(data.Name, data.ProfileTypeId, acessToken);
 
-            try {
-                Employee data = await _authData.Register(u);
-                string acessToken = await _authenticateUser.CreateAcessToken(u.Id, u.ProfileTypeId);
-                UserRes response = new UserRes(data.Name, data.ProfileTypeId, acessToken);
-            }
-            catch (System.Exception) {
-
-                throw;
-            }
-
-
-            throw new NotImplementedException();
+            return response;
         }
     }
 }
