@@ -12,8 +12,8 @@ namespace GesApi.src.Data {
             _context = context;
         }
 
-        public async Task<TicketRes> CreateTicket(TicketRes ticket) {
-            await _context.AddAsync(ticket);
+        public async Task<Ticket> CreateTicket(Ticket ticket) {
+            await _context.Tickets.AddAsync(ticket);
             await _context.SaveChangesAsync();
             return ticket;
         }
@@ -26,32 +26,17 @@ namespace GesApi.src.Data {
             return true;
         }
 
-        public async Task<List<TicketRes>> ReadAllTickets() {
-            return await _context.Tickets
-            .Select(t => new TicketRes(
-                t.Id,
-                t.BuyDate,
-                t.Cleared,
-                t.ClearedDate,
-                t.MealId,
-                t.BuyerId
-            )).ToListAsync();
+        public async Task<List<Ticket>> ReadAllTickets() {
+            return await _context.Tickets.ToListAsync();
         }
 
-        public async Task<TicketRes> ReadTicketById(long id) {
+        public async Task<Ticket> ReadTicketById(long id) {
             return await _context.Tickets
             .Where(t => t.Id == id)
-            .Select(t => new TicketRes(
-               t.Id,
-               t.BuyDate,
-               t.Cleared,
-               t.ClearedDate,
-               t.MealId,
-               t.BuyerId
-            )).FirstOrDefaultAsync();
+            .FirstOrDefaultAsync();
         }
 
-        public async Task<List<TicketRes>> ReadTicketsByFilter(TicketFilters ticket) {
+        public async Task<List<Ticket>> ReadTicketsByFilter(TicketFilters ticket) {
             IQueryable<Ticket> query = _context.Tickets.AsNoTracking();
 
             if(ticket.Cleared.HasValue) query = query.Where(t => t.Cleared == ticket.Cleared.Value); 
@@ -60,15 +45,7 @@ namespace GesApi.src.Data {
             if(ticket.BuyDateStart.HasValue) query = query.Where(t => t.BuyDate >= ticket.BuyDateStart.Value); 
             if(ticket.BuyDateEnd.HasValue) query = query.Where(t => t.BuyDate <= ticket.BuyDateEnd.Value); 
 
-            return await query.OrderByDescending(t => t.BuyDate)
-            .Select(t => new TicketRes(
-               t.Id,
-               t.BuyDate,
-               t.Cleared,
-               t.ClearedDate,
-               t.MealId,
-               t.BuyerId
-            )).ToListAsync();
+            return await query.OrderByDescending(t => t.BuyDate).ToListAsync();
         }
 
         public async Task<Boolean> ClearedTicketById(long id, bool cleared, DateTime clearedDate) {

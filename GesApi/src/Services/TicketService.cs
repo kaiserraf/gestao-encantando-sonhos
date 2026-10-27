@@ -1,3 +1,4 @@
+using gesApi.src.Data.ModelsEFCore;
 using gesApi.src.DTOs;
 using GesApi.src.Data.DataInterface;
 using GesApi.src.DTOs.Ticket;
@@ -16,15 +17,16 @@ namespace GesApi.src.Services {
         }
 
         public async Task<TicketRes> CreateTicket(TicketReq ticket) {
-            DateTime buyDate = DateTime.UtcNow;
-            TicketRes t = new TicketRes(
-                buyDate: buyDate,
+            Ticket t = new Ticket(
+                buyDate: DateTime.UtcNow,
                 cleared: ticket.Cleared,
                 mealId: ticket.MealId,
                 buyerId: ticket.BuyerId
             );
-            TicketRes data = await _ticketData.CreateTicket(t);
-            return data;
+            
+            DateTime buyDate = DateTime.UtcNow;
+            Ticket data = await _ticketData.CreateTicket(t);
+            return TransformToResponse(data);
         }
 
         public async Task<Boolean> DeleteTicket(long id) {
@@ -32,11 +34,13 @@ namespace GesApi.src.Services {
         }
 
         public async Task<List<TicketRes>> ReadAllTickets() {
-            return await _ticketData.ReadAllTickets();
+            List<Ticket> data = await _ticketData.ReadAllTickets();
+            return data.Select(TransformToResponse).ToList();
         }
 
         public async Task<TicketRes> ReadTicketById(long id) {
-            return await _ticketData.ReadTicketById(id);
+            Ticket data = await _ticketData.ReadTicketById(id);
+            return TransformToResponse(data);
         }
 
         public async Task<List<TicketRes>> ReadTicketsByFilter(TicketFilters ticket) {
@@ -47,8 +51,20 @@ namespace GesApi.src.Services {
                 ticket.BuyDateEnd = DateTime.SpecifyKind(ticket.BuyDateEnd.Value, DateTimeKind.Utc);
             }
 
-            List<TicketRes> data = await _ticketData.ReadTicketsByFilter(ticket);
-            return data;
+            List<Ticket> data = await _ticketData.ReadTicketsByFilter(ticket);
+            return data.Select(TransformToResponse).ToList();
         }
+
+        public static TicketRes TransformToResponse(Ticket ticket) {
+            return new TicketRes(
+                ticket.Id,
+                ticket.BuyDate,
+                ticket.Cleared,
+                ticket.ClearedDate,
+                ticket.MealId,
+                ticket.BuyerId
+            );
+        }
+
     }
 }
