@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GesApi.src.Controllers {
     [ApiController]
-    [Route("controller")]
+    [Route("[controller]")]
     public class TicketsController : ControllerBase {
         private readonly ITicketService _ticketService;
         public TicketsController(ITicketService ticketService) {

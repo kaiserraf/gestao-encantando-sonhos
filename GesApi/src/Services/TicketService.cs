@@ -24,7 +24,6 @@ namespace GesApi.src.Services {
                 buyerId: ticket.BuyerId
             );
             
-            DateTime buyDate = DateTime.UtcNow;
             Ticket data = await _ticketData.CreateTicket(t);
             return TransformToResponse(data);
         }

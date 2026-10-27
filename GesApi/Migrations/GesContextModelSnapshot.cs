@@ -22,7 +22,7 @@ namespace GesApi.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("gesApi.src.ModelsEFCore.Buyer", b =>
+            modelBuilder.Entity("gesApi.src.Data.ModelsEFCore.Buyer", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,29 +30,28 @@ namespace GesApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Cpf")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<long>("EmployeeId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("LeadBuyerId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Name")
-                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeId");
 
+                    b.HasIndex("LeadBuyerId");
+
                     b.ToTable("Buyers");
                 });
 
-            modelBuilder.Entity("gesApi.src.ModelsEFCore.Employee", b =>
+            modelBuilder.Entity("gesApi.src.Data.ModelsEFCore.Employee", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,19 +60,15 @@ namespace GesApi.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Cpf")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
                         .HasColumnType("text");
 
                     b.Property<int>("ProfileTypeId")
@@ -89,7 +84,7 @@ namespace GesApi.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("gesApi.src.ModelsEFCore.Meal", b =>
+            modelBuilder.Entity("gesApi.src.Data.ModelsEFCore.Meal", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -98,11 +93,9 @@ namespace GesApi.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.PrimitiveCollection<string[]>("Items")
-                        .IsRequired()
                         .HasColumnType("text[]");
 
                     b.Property<string>("MealName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<decimal>("Price")
@@ -113,7 +106,7 @@ namespace GesApi.Migrations
                     b.ToTable("Meals");
                 });
 
-            modelBuilder.Entity("gesApi.src.ModelsEFCore.ProfileTypes", b =>
+            modelBuilder.Entity("gesApi.src.Data.ModelsEFCore.ProfileTypes", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -122,7 +115,6 @@ namespace GesApi.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("FunctionName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -130,7 +122,7 @@ namespace GesApi.Migrations
                     b.ToTable("ProfileTypes");
                 });
 
-            modelBuilder.Entity("gesApi.src.ModelsEFCore.RefreshTokens", b =>
+            modelBuilder.Entity("gesApi.src.Data.ModelsEFCore.RefreshTokens", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -148,7 +140,6 @@ namespace GesApi.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Token")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -158,7 +149,7 @@ namespace GesApi.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("gesApi.src.ModelsEFCore.Ticket", b =>
+            modelBuilder.Entity("gesApi.src.Data.ModelsEFCore.Ticket", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -190,20 +181,26 @@ namespace GesApi.Migrations
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("gesApi.src.ModelsEFCore.Buyer", b =>
+            modelBuilder.Entity("gesApi.src.Data.ModelsEFCore.Buyer", b =>
                 {
-                    b.HasOne("gesApi.src.ModelsEFCore.Employee", "Employee")
+                    b.HasOne("gesApi.src.Data.ModelsEFCore.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("gesApi.src.Data.ModelsEFCore.Buyer", "LeadBuyer")
+                        .WithMany()
+                        .HasForeignKey("LeadBuyerId");
+
                     b.Navigation("Employee");
+
+                    b.Navigation("LeadBuyer");
                 });
 
-            modelBuilder.Entity("gesApi.src.ModelsEFCore.Employee", b =>
+            modelBuilder.Entity("gesApi.src.Data.ModelsEFCore.Employee", b =>
                 {
-                    b.HasOne("gesApi.src.ModelsEFCore.ProfileTypes", "ProfileTypes")
+                    b.HasOne("gesApi.src.Data.ModelsEFCore.ProfileTypes", "ProfileTypes")
                         .WithMany()
                         .HasForeignKey("ProfileTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -212,9 +209,9 @@ namespace GesApi.Migrations
                     b.Navigation("ProfileTypes");
                 });
 
-            modelBuilder.Entity("gesApi.src.ModelsEFCore.RefreshTokens", b =>
+            modelBuilder.Entity("gesApi.src.Data.ModelsEFCore.RefreshTokens", b =>
                 {
-                    b.HasOne("gesApi.src.ModelsEFCore.Employee", "Employee")
+                    b.HasOne("gesApi.src.Data.ModelsEFCore.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -223,15 +220,15 @@ namespace GesApi.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("gesApi.src.ModelsEFCore.Ticket", b =>
+            modelBuilder.Entity("gesApi.src.Data.ModelsEFCore.Ticket", b =>
                 {
-                    b.HasOne("gesApi.src.ModelsEFCore.Buyer", "Buyer")
+                    b.HasOne("gesApi.src.Data.ModelsEFCore.Buyer", "Buyer")
                         .WithMany()
                         .HasForeignKey("BuyerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("gesApi.src.ModelsEFCore.Meal", "Meal")
+                    b.HasOne("gesApi.src.Data.ModelsEFCore.Meal", "Meal")
                         .WithMany()
                         .HasForeignKey("MealId")
                         .OnDelete(DeleteBehavior.Cascade)

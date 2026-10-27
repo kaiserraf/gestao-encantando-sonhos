@@ -1,7 +1,7 @@
 {
-  "name": "string",
-  "cpf": "string",
-  "phone": "string",
-  "password": "string",
-  "profileTypeId": 0
+  "name": "Nome de teste",
+  "cpf": "00000000000",
+  "phone": "00000000000",
+  "password": "senhaTeste123",
+  "profileTypeId": 1
 }
