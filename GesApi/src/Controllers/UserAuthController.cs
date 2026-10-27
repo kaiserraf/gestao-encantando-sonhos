@@ -27,6 +27,7 @@ namespace gesApi.src.Controller {
                 return StatusCode(StatusCodes.Status500InternalServerError, dbe.Message);
             }
         }
+        
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginUserReq user) {
             try {

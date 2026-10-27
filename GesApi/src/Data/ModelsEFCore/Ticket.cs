@@ -14,5 +14,13 @@ namespace gesApi.src.Data.ModelsEFCore {
         
         [ForeignKey(nameof(BuyerId))]
         public Buyer Buyer { get; set; }
+
+        public Ticket(){}
+        public Ticket(DateTime buyDate, bool cleared, int mealId, long buyerId) {
+            BuyDate = buyDate;
+            Cleared = cleared;
+            MealId = mealId;
+            BuyerId = buyerId;
+        }
     }
 }

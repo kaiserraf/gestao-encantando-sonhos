@@ -87,13 +87,50 @@ Todos os dados são criados a partir de migrations geradas pelo EF Core, garanti
 | `POST` | 400 | `CpfExistsException`, usuario já existe |
 | `POST` | 500 | `DbUpdateException`, erro ao conectar com banco de dados |
 
-### 3.1.2 Login
+#### 3.1.2 Login
 | Metodo |  Status| Body|
 |---|---|---|
 | `POST` | 200 | usuário logado |
 | `POST` | 500 | `OperationCanceledException`, erro na operação com banco de dados |
 | `POST` | 400 | `IncorrectException`, cpf ou senha incorretos |
 
+### 3.2 Tickets
+#### 3.2.1 Create
+| Metodo |  Status| Body|
+|---|---|---|
+|`POST` | 201 | Created |
+| `POST` | 500 | `OperationCanceledException`, erro na operação com banco de dados |
+| `POST` | 500 | `DbUpdateException`, Não foi possivel salvar as alterações no banco |
+
+#### 3.2.1 Read All
+| Metodo |  Status| Body|
+|---|---|---|
+| `GET` | 200 | Lista de tickets |
+| `GET` | 500 | `OperationCanceledException`, erro na operação com banco de dados |
+| `GET` | 500 | `DbUpdateException`, Não foi possivel salvar as alterações no banco |
+
+#### 3.2.1 Read By Filter
+| Metodo |  Status| Body|
+|---|---|---|
+| `GET` | 200 | Lista de tickets filtrados |
+| `GET` | 500 | `OperationCanceledException`, erro na operação com banco de dados |
+| `GET` | 500 | `DbUpdateException`, Não foi possivel salvar as alterações no banco |
+| `DELETE` | 404 | `KeyNotFoundException`, Não foi possivel salvar as alterações no banco |
+
+#### 3.2.1 Read By Id
+| Metodo |  Status| Body|
+|---|---|---|
+| `GET` | 200 | Ticket solicitado |
+| `GET` | 500 | `OperationCanceledException`, erro na operação com banco de dados |
+| `GET` | 500 | `DbUpdateException`, Não foi possivel salvar as alterações no banco |
+
+#### 3.2.1 Delete
+| Metodo |  Status| Body|
+|---|---|---|
+| `DELETE` | 200 | Lista de tickets |
+| `DELETE` | 500 | `OperationCanceledException`, erro na operação com banco de dados |
+| `DELETE` | 500 | `DbUpdateException`, Não foi possivel salvar as alterações no banco |
+| `DELETE` | 404 | `KeyNotFoundException`, Não foi possivel salvar as alterações no banco |
 
 
 ## 4. Autenticação

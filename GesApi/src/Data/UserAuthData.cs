@@ -12,7 +12,7 @@ namespace gesApi.src.Data.DataInterfaces {
         }
 
         public async Task<Employee> Register(Employee user) {
-            _context.Add(user);
+            await _context.AddAsync(user);
             await _context.SaveChangesAsync();
             return user;
         }

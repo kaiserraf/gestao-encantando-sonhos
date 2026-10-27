@@ -1,4 +1,4 @@
-using gesApi.src.ModelsEFCore;
+using gesApi.src.Data.ModelsEFCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace gesApi.src.Config {
