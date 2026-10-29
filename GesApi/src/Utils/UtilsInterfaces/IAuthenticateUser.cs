@@ -5,6 +5,6 @@ using System.Threading.Tasks;
 
 namespace GesApi.src.Utils.UtilsInterfaces {
     public interface IAuthenticateUser {
-        public Task<string> CreateAcessToken(long id, int profileTypeId);
+        public Task<string> CreateToken(long id, int profileTypeId, int addHours);
     }
 }

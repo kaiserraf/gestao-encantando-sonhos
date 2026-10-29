@@ -17,7 +17,7 @@ namespace GesApi.src.Utils {
             _config = config;
         }
 
-        public async Task<string> CreateAcessToken(long id, int profileTypeId) {
+        public async Task<string> CreateToken(long id, int profileTypeId, int addHours) {
             var claims = new[] {
                 new Claim("id", id.ToString()),
                 new Claim("profileTypeId", profileTypeId.ToString())
@@ -30,7 +30,7 @@ namespace GesApi.src.Utils {
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
+                expires: DateTime.UtcNow.AddHours(addHours),
                 signingCredentials: creds
             );
 

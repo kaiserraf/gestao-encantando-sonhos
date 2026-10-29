@@ -10,5 +10,12 @@ namespace gesApi.src.Data.ModelsEFCore {
 
         [ForeignKey(nameof(EmployeeId))]
         public Employee Employee { get; set; }
+
+        public RefreshTokens(string token, long employeeId, DateTime createdDate, DateTime expiresAt) {
+            Token = token;
+            EmployeeId = employeeId;
+            CreatedDate = createdDate;
+            ExpiresAt = expiresAt;
+        }
     }
 }

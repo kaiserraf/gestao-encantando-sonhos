@@ -28,10 +28,21 @@ namespace gesApi.src.Services {
             bool validPassword = await _cryptData.VerifyPass(user.Password, userExists.PasswordHash);
             if(validPassword is false) throw new IncorrectException("EMAIL OU SENHA INVALIDOS");
 
-            string acessToken = await _authenticateUser.CreateAcessToken(
-                userExists.Id, userExists.ProfileTypeId);
+            string acessToken = await _authenticateUser.CreateToken(
+                userExists.Id, userExists.ProfileTypeId, 1);
+            string refreshToken = await _authenticateUser.CreateToken(
+                userExists.Id, userExists.ProfileTypeId, 2);
 
-            UserRes response = new UserRes(userExists.Name, userExists.ProfileTypeId, acessToken);
+            RefreshTokens refreshObj = new RefreshTokens(
+                token: refreshToken,
+                employeeId: userExists.Id,
+                createdDate: DateTime.UtcNow,
+                expiresAt: DateTime.UtcNow.AddHours(2)
+            );
+
+            await _authData.RefreshTokenCreate(refreshObj);
+
+            UserRes response = new UserRes(userExists.Name, userExists.ProfileTypeId, acessToken, refreshToken);
             
             return response;
         }
@@ -62,8 +73,19 @@ namespace gesApi.src.Services {
             );
 
             Employee data = await _authData.Register(u);
-            string acessToken = await _authenticateUser.CreateAcessToken(u.Id, u.ProfileTypeId);
-            UserRes response = new UserRes(data.Name, data.ProfileTypeId, acessToken);
+            string acessToken = await _authenticateUser.CreateToken(u.Id, u.ProfileTypeId, 1);
+            string refreshToken = await _authenticateUser.CreateToken(u.Id, u.ProfileTypeId, 2);
+
+            RefreshTokens refreshObj = new RefreshTokens(
+                token: refreshToken,
+                employeeId: u.Id,
+                createdDate: DateTime.UtcNow,
+                expiresAt: DateTime.UtcNow.AddHours(2)
+            );
+
+            await _authData.RefreshTokenCreate(refreshObj);
+            
+            UserRes response = new UserRes(data.Name, data.ProfileTypeId, acessToken, refreshToken);
 
             return response;
         }

@@ -127,10 +127,76 @@ Todos os dados são criados a partir de migrations geradas pelo EF Core, garanti
 #### 3.2.1 Delete
 | Metodo |  Status| Body|
 |---|---|---|
-| `DELETE` | 200 | Lista de tickets |
+| `DELETE` | 200 | Deleta o ticket solicitado |
 | `DELETE` | 500 | `OperationCanceledException`, erro na operação com banco de dados |
 | `DELETE` | 500 | `DbUpdateException`, Não foi possivel salvar as alterações no banco |
 | `DELETE` | 404 | `KeyNotFoundException`, Não foi possivel salvar as alterações no banco |
 
+### 3.2 Buyers
+#### 3.2.1 Create
+| Metodo |  Status| Body|
+|---|---|---|
+|`POST` | 201 | Created |
+| `POST` | 500 | `OperationCanceledException`, erro na operação com banco de dados |
+| `POST` | 500 | `DbUpdateException`, Não foi possivel salvar as alterações no banco |
+
+#### 3.2.1 Read All
+| Metodo |  Status| Body|
+|---|---|---|
+| `GET` | 200 | Lista de compradores |
+| `GET` | 500 | `OperationCanceledException`, erro na operação com banco de dados |
+| `GET` | 500 | `DbUpdateException`, Não foi possivel salvar as alterações no banco |
+
+#### 3.2.1 Read By Filter
+| Metodo |  Status| Body|
+|---|---|---|
+| `GET` | 200 | Lista de compradores filtrados |
+| `GET` | 500 | `OperationCanceledException`, erro na operação com banco de dados |
+| `GET` | 500 | `DbUpdateException`, Não foi possivel salvar as alterações no banco |
+| `DELETE` | 404 | `KeyNotFoundException`, Não foi possivel salvar as alterações no banco |
+
+#### 3.2.1 Read By Id
+| Metodo |  Status| Body|
+|---|---|---|
+| `GET` | 200 | comprador solicitado |
+| `GET` | 500 | `OperationCanceledException`, erro na operação com banco de dados |
+| `GET` | 500 | `DbUpdateException`, Não foi possivel salvar as alterações no banco |
+
+#### 3.2.1 Delete
+| Metodo |  Status| Body|
+|---|---|---|
+| `DELETE` | 200 | Deleta comprador solicitado |
+| `DELETE` | 500 | `OperationCanceledException`, erro na operação com banco de dados |
+| `DELETE` | 500 | `DbUpdateException`, Não foi possivel salvar as alterações no banco |
+| `DELETE` | 404 | `KeyNotFoundException`, Não foi possivel salvar as alterações no banco |
 
 ## 4. Autenticação
+
+## 5. Rotas HTTP
+### 5.1 Users
+| Metodo | Rota | Descrição |
+|---|---|---|
+| `POST` | `/Register` | Cadastra um novo usuário |
+| `POST` | `/Login` | Autentica cpf e senha, disponibilizando accessToken para o usuário |
+| `POST` | `/Logout` | Invalida o token no banco, encerrando a sessão |
+| `POST` | `/RefreshToken` | Renova o access token |
+
+### 5.2 Tickets
+| Metodo | Rota | Descrição |
+|---|---|---|
+| `POST` | `/NewTicket` | Gera um novo ingresso |
+| `GET` | `/Tickets` | Pega todos os ingressos disponiveis |
+| `GET` | `/Tickets/{id:long}` | Pega um ingresso pelo seu Id  |
+| `GET` | `/TicketsFilter` | Pega um ou mais ingressos baseado em filtros |
+| `POST` | `/TicketCleared/{id:long}` | Da baixa em um ingresso pelo seu Id |
+| `DELETE` | `/Tickets/{id:long}` | Deleta um ingresso pelo seu Id |
+
+### 5.3 Buyers
+| Metodo | Rota | Descrição |
+|---|---|---|
+| `POST` | `/NewBuyer` | Cadastra um novo comprador |
+| `GET` | `/Buyers` | Pega todos os compradores disponiveis |
+| `GET` | `/Buyers/{id:long}` | Pega um comprador pelo seu Id  |
+| `GET` | `/BuyersFilter` | Pega um ou mais compradores baseado em filtros |
+| `PATCH` | `/BuyersUpdate/{id:long}` | Atualiza as informações de um comprador pelo seu Id |
+| `DELETE` | `/Buyers/{id:long}` | Deleta um comprador pelo seu Id |

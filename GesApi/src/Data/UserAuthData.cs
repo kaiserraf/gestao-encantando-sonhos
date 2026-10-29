@@ -29,6 +29,12 @@ namespace gesApi.src.Data.DataInterfaces {
             throw new NotImplementedException();
         }
 
+        public async Task<bool> RefreshTokenCreate(RefreshTokens refreshTokens) {
+            await _context.RefreshTokens.AddAsync(refreshTokens);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<bool> VerifyCpf(string cpf) {
             return await _context.Employees.AnyAsync(e => e.Cpf == cpf);
         }

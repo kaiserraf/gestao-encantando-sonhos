@@ -1,0 +1,3 @@
+# Sprint 01 - CRUD dos itens básicos + autenticação
+A primeira sprint é focada principalmente em criar o CRUD (create, read, update, delete) dos itens básicos do sistema, como: Buyers e Tickets, além da autenticação dos usuários, essa primeira sprint é focada apenas nesse básico, além da integração com o frontend, que será criado para testar o fluxo de usuário. \
+O sistema atual está sendo construido com base em um MVP criado pela IA, na qual não tem nenhuma pretenção de ser usado, e está em uma stack completamente diferente, mas é bom para ser um norte.

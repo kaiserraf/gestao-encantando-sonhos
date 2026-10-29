@@ -7,6 +7,7 @@ namespace gesApi.src.Data.DataInterfaces {
         public Task<Employee> Login(string cpf);
         public Task<Employee> Logout();
         public Task<Employee> RefreshToken();
+        public Task<bool> RefreshTokenCreate(RefreshTokens refreshTokens);
         public Task<bool> VerifyCpf(string cpf);
     }
 }
