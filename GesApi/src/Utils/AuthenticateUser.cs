@@ -17,7 +17,7 @@ namespace GesApi.src.Utils {
             _config = config;
         }
 
-        public async Task<string> CreateToken(long id, int profileTypeId, int addHours) {
+        public async Task<string> CreateAccessToken(long id, int profileTypeId, int addHours) {
             var claims = new[] {
                 new Claim("id", id.ToString()),
                 new Claim("profileTypeId", profileTypeId.ToString())

@@ -19,11 +19,8 @@ namespace GesApi.src.Controllers {
                 TicketRes res = await _ticketService.CreateTicket(ticket);
                 return Created("", res);
             }
-            catch (DbUpdateException dbe) {
-                return StatusCode(StatusCodes.Status500InternalServerError, dbe.Message);
-            }
-            catch (OperationCanceledException ope) {
-                return StatusCode(StatusCodes.Status500InternalServerError, ope.Message);
+            catch (Exception e) when (e is DbUpdateException or OperationCanceledException) {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
 
@@ -33,11 +30,8 @@ namespace GesApi.src.Controllers {
                 List<TicketRes> res = await _ticketService.ReadAllTickets();
                 return Ok(res);
             }
-            catch (DbUpdateException dbe) {
-                return StatusCode(StatusCodes.Status500InternalServerError, dbe.Message);
-            }
-            catch (OperationCanceledException ope) {
-                return StatusCode(StatusCodes.Status500InternalServerError, ope.Message);
+            catch (Exception e) when (e is DbUpdateException or OperationCanceledException) {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
 
@@ -47,11 +41,8 @@ namespace GesApi.src.Controllers {
                 TicketRes res = await _ticketService.ReadTicketById(id);
                 return Ok(res);
             }
-            catch (DbUpdateException dbe) {
-                return StatusCode(StatusCodes.Status500InternalServerError, dbe.Message);
-            }
-            catch (OperationCanceledException ope) {
-                return StatusCode(StatusCodes.Status500InternalServerError, ope.Message);
+            catch (Exception e) when (e is DbUpdateException or OperationCanceledException) {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
 
@@ -61,11 +52,8 @@ namespace GesApi.src.Controllers {
                 List<TicketRes> res = await _ticketService.ReadTicketsByFilter(ticket);
                 return Ok(res);
             }
-            catch (OperationCanceledException ope) {
-                return StatusCode(StatusCodes.Status500InternalServerError, ope.Message);
-            }
-            catch (DbUpdateException dbe) {
-                return StatusCode(StatusCodes.Status500InternalServerError, dbe.Message);
+            catch (Exception e) when (e is DbUpdateException or OperationCanceledException) {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
         
@@ -75,11 +63,8 @@ namespace GesApi.src.Controllers {
                 Boolean res = await _ticketService.ClearedTicketById(id, cleared);
                 return Ok(res);
             }
-            catch (OperationCanceledException ope) {
-                return StatusCode(StatusCodes.Status500InternalServerError, ope.Message);
-            }
-            catch (DbUpdateException dbe) {
-                return StatusCode(StatusCodes.Status500InternalServerError, dbe.Message);
+            catch (Exception e) when (e is DbUpdateException or OperationCanceledException) {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
             catch (KeyNotFoundException knfe) {
                 return StatusCode(StatusCodes.Status404NotFound, knfe.Message);
@@ -92,11 +77,8 @@ namespace GesApi.src.Controllers {
                 bool res = await _ticketService.DeleteTicket(id);
                 return Ok("DELETED");
             }
-            catch (OperationCanceledException ope) {
-                return StatusCode(StatusCodes.Status500InternalServerError, ope.Message);
-            }
-            catch (DbUpdateException dbe) {
-                return StatusCode(StatusCodes.Status500InternalServerError, dbe.Message);
+            catch (Exception e) when (e is DbUpdateException or OperationCanceledException) {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
             catch (KeyNotFoundException knfe) {
                 return StatusCode(StatusCodes.Status404NotFound, knfe.Message);

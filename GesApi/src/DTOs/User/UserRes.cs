@@ -12,5 +12,11 @@ namespace gesApi.src.DTOs {
             AcessToken = acessToken;
             RefreshToken = refreshToken;
         }
+
+        public UserRes(string name, int profileTypeId) {
+            Name = name;
+            ProfileTypeId = profileTypeId;
+        }
+        
     }
 }

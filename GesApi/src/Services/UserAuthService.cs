@@ -1,4 +1,4 @@
-using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using gesApi.src.Data.DataInterfaces;
 using gesApi.src.Data.ModelsEFCore;
 using gesApi.src.DTOs;
@@ -6,7 +6,6 @@ using gesApi.src.Services.ServicesInterface;
 using gesApi.src.Utils.Exceptions;
 using gesApi.src.Utils.UtilsInterfaces;
 using GesApi.src.Utils.UtilsInterfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace gesApi.src.Services {
     public class UserAuthService : IUserAuthService {
@@ -24,35 +23,61 @@ namespace gesApi.src.Services {
 
         public async Task<UserRes> LoginService(LoginUserReq user) {
             Employee userExists = await _authData.Login(user.Cpf);
-            if(userExists is null) throw new IncorrectException("EMAIL OU SENHA INVALIDOS");
+            if(userExists is null) throw new IncorrectException("CPF OU SENHA INVALIDOS");
             bool validPassword = await _cryptData.VerifyPass(user.Password, userExists.PasswordHash);
-            if(validPassword is false) throw new IncorrectException("EMAIL OU SENHA INVALIDOS");
+            if(validPassword is false) throw new IncorrectException("CPF OU SENHA INVALIDOS");
 
-            string acessToken = await _authenticateUser.CreateToken(
+            string acessToken = await _authenticateUser.CreateAccessToken(
                 userExists.Id, userExists.ProfileTypeId, 1);
-            string refreshToken = await _authenticateUser.CreateToken(
-                userExists.Id, userExists.ProfileTypeId, 2);
+            string refreshToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
 
             RefreshTokens refreshObj = new RefreshTokens(
                 token: refreshToken,
                 employeeId: userExists.Id,
                 createdDate: DateTime.UtcNow,
-                expiresAt: DateTime.UtcNow.AddHours(2)
+                expiresAt: DateTime.UtcNow.AddDays(3)
             );
 
-            await _authData.RefreshTokenCreate(refreshObj);
+            await _authData.CreateRefreshToken(refreshObj);
 
-            UserRes response = new UserRes(userExists.Name, userExists.ProfileTypeId, acessToken, refreshToken);
+            UserRes loginResponse = new UserRes(userExists.Name, userExists.ProfileTypeId, acessToken, refreshToken);
             
-            return response;
+            return loginResponse;
         }
 
-        public async Task<UserRes> Logout() {
-            throw new NotImplementedException();
+        public async Task<bool> Logout(string token) {
+            return await _authData.DeleteRefreshToken(token);
         }
 
-        public async Task<UserRes> RefreshToken() {
-            throw new NotImplementedException();
+        public async Task<UserRes> RefreshToken(string token) {
+            RefreshTokens oldRefreshToken = await _authData.FindRefreshTokenAndEmployee(token);
+            
+            if(oldRefreshToken is null) throw new RefreshTokenNotFindException();
+
+            bool deleted = await _authData.DeleteRefreshToken(oldRefreshToken.Token);
+            if(!deleted) throw new RefreshTokenNotFindException();
+
+            if(oldRefreshToken.ExpiresAt < DateTime.UtcNow) throw new InvalidRefreshTokenException();
+
+            string newAcessToken = await _authenticateUser.CreateAccessToken(
+                oldRefreshToken.Employee.Id, oldRefreshToken.Employee.ProfileTypeId, 1);
+            string newRefreshToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+
+            RefreshTokens refreshObj = new RefreshTokens(
+                token: newRefreshToken,
+                employeeId: oldRefreshToken.Employee.Id,
+                createdDate: DateTime.UtcNow,
+                expiresAt: DateTime.UtcNow.AddDays(3)
+            );
+            
+            await _authData.CreateRefreshToken(refreshObj);
+
+            return new UserRes(
+                oldRefreshToken.Employee.Name, 
+                oldRefreshToken.Employee.ProfileTypeId,
+                newAcessToken,
+                newRefreshToken
+            );
         }
 
         public async Task<UserRes> RegisterService(LoginRegisterReq user) {
@@ -73,21 +98,10 @@ namespace gesApi.src.Services {
             );
 
             Employee data = await _authData.Register(u);
-            string acessToken = await _authenticateUser.CreateToken(u.Id, u.ProfileTypeId, 1);
-            string refreshToken = await _authenticateUser.CreateToken(u.Id, u.ProfileTypeId, 2);
 
-            RefreshTokens refreshObj = new RefreshTokens(
-                token: refreshToken,
-                employeeId: u.Id,
-                createdDate: DateTime.UtcNow,
-                expiresAt: DateTime.UtcNow.AddHours(2)
-            );
+            UserRes registerResponse = new UserRes(data.Name, data.ProfileTypeId);
 
-            await _authData.RefreshTokenCreate(refreshObj);
-            
-            UserRes response = new UserRes(data.Name, data.ProfileTypeId, acessToken, refreshToken);
-
-            return response;
+            return registerResponse;
         }
     }
 }

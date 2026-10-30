@@ -27,27 +27,47 @@ namespace gesApi.src.Controller {
                 return StatusCode(StatusCodes.Status500InternalServerError, dbe.Message);
             }
         }
-        
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginUserReq user) {
             try {
                 UserRes res = await _authService.LoginService(user);
                 return Ok(res);
-            } catch (IncorrectException ie) {
+            }
+            catch (IncorrectException ie) {
                 return StatusCode(StatusCodes.Status400BadRequest, ie.Message);
-            } catch (OperationCanceledException ope) {
+            }
+            catch (OperationCanceledException ope) {
                 return StatusCode(StatusCodes.Status500InternalServerError, ope.Message);
             }
         }
 
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout() {
-            throw new NotImplementedException();
+            if (!Request.Cookies.TryGetValue("refreshCookie", out string token)) {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+            try {
+                bool res = await _authService.Logout(token);
+                return Ok(res);
+            }
+            catch (RefreshTokenNotFindException rtnfe) {
+                return StatusCode(StatusCodes.Status401Unauthorized, rtnfe.Message);
+            }
         }
 
         [HttpPost("RefreshToken")]
         public async Task<IActionResult> RefreshToken() {
-            throw new NotImplementedException();
+            if (!Request.Cookies.TryGetValue("refreshCookie", out string token)) {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+            try {
+                UserRes res = await _authService.RefreshToken(token);
+                return Ok(res);
+            }
+            catch (Exception e) when (e is RefreshTokenNotFindException or InvalidRefreshTokenException) {
+                return StatusCode(StatusCodes.Status401Unauthorized, e.Message);
+            }
         }
 
     }

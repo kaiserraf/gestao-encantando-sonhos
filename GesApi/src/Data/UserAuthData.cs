@@ -21,15 +21,13 @@ namespace gesApi.src.Data.DataInterfaces {
             return await _context.Employees.FirstOrDefaultAsync(e => e.Cpf == cpf);
         }
 
-        public async Task<Employee> Logout() {
-            throw new NotImplementedException();
+        public async Task<RefreshTokens> FindRefreshTokenAndEmployee(string token) {
+            return await _context.RefreshTokens.
+                    Include(y => y.Employee)
+                    .FirstOrDefaultAsync(x => x.Token == token);
         }
 
-        public async Task<Employee> RefreshToken() {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> RefreshTokenCreate(RefreshTokens refreshTokens) {
+        public async Task<bool> CreateRefreshToken(RefreshTokens refreshTokens) {
             await _context.RefreshTokens.AddAsync(refreshTokens);
             await _context.SaveChangesAsync();
             return true;
@@ -39,5 +37,13 @@ namespace gesApi.src.Data.DataInterfaces {
             return await _context.Employees.AnyAsync(e => e.Cpf == cpf);
         }
 
+        public async Task<bool> DeleteRefreshToken(string token) {
+            RefreshTokens refreshToken = await _context.RefreshTokens
+                    .FirstOrDefaultAsync(t => t.Token == token);
+            if(refreshToken is null) return false;
+            _context.Remove(refreshToken);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
